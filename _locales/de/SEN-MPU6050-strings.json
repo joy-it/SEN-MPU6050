@@ -1,0 +1,20 @@
+{
+  "SENMPU6050.axisAcceleration|block": "Beschleunigung der %axisXYZ Achse mit %accelSen Empfindlichkeit (Einheit: g)",
+  "SENMPU6050.axisRotation|block": "Winkel der %axisXYZ Achse mit %accelSen Empfindlichkeit (Einheit: Grad)",
+  "SENMPU6050.gyroscope|block": "Gyroskop-Werte der %axisXYZ Achse mit %gyroSen Empfindlichkeit (Einheit: rad/s)",
+  "SENMPU6050.initMPU6050|block": "Initialisiere SEN-MPU6050",
+  "SENMPU6050.readTemperature|block": "Temperatur (Einheit: Celsius)",
+  "SENMPU6050|block": "SEN-MPU6050",
+  "accelSen.RANGE_2_G|block": "2g",
+  "accelSen.RANGE_4_G|block": "16g",
+  "accelSen.RANGE_4_G|block": "4g",
+  "accelSen.RANGE_8_G|block": "8g",
+  "axisXYZ.x|block": "X",
+  "axisXYZ.y|block": "Y",
+  "axisXYZ.z|block": "Z",
+  "gyroSen.RANGE_250_DPS|block": "250dps",
+  "gyroSen.RANGE_2000_DPS|block": "2000dps",
+  "gyroSen.RANGE_500_DPS|block": "500dps",
+  "gyroSen.RANGE_1000_DPS|block": "1000dps",
+  "{id:category}SENMPU6050": "SENMPU6050"
+}

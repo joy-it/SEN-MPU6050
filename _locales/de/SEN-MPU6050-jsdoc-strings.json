@@ -1,0 +1,11 @@
+{
+  "SENMPU6050": "SEN-MPU6050 Block",
+  "SENMPU6050.axisAcceleration": "Beschleunigungswerte der entsprechenden Achse",
+  "SENMPU6050.axisRotation": "Rotationswerte der entsprechenden Achse",
+  "SENMPU6050.gyroscope": "Gyroskop-Werte",
+  "SENMPU6050.initMPU6050": "Initialisiere SEN-MPU6050",
+  "SENMPU6050.readTemperature": "Temperatur abrufen",
+  "accelSen": "Empfindlichkeit des Beschleunigungsmesser",
+  "axisXYZ": "Aufzaehlung der Achsen (X, Y & Z)",
+  "gyroSen": "Empfindlichkeit des Gyroskops"
+}

@@ -1,0 +1,11 @@
+{
+  "SENMPU6050": "SEN-MPU6050 Block",
+  "SENMPU6050.axisAcceleration": "Get acceleration of the corresponding Axis",
+  "SENMPU6050.axisRotation": "Get rotation of the corresponding Axis",
+  "SENMPU6050.gyroscope": "Get gyroscope values",
+  "SENMPU6050.initMPU6050": "Initialize SEN-MPU6050",
+  "SENMPU6050.readTemperature": "Get temperature",
+  "accelSen": "Sensitivity of Accelerometer",
+  "axisXYZ": "Enumeration of Axis (X, Y & Z)",
+  "gyroSen": "Sensitivity of Gyroscope"
+}
