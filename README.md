@@ -10,22 +10,22 @@ To be able to track both fast and slow motions, the sensitivity can be chosen be
 
 ```typescript
 // Retrieve gyroscope value of x axis with sensitiviy of 250dps
-serial.writeLine("X Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.x, gyroSen.RANGE_250_DPS) + " rad/s");
+serial.writeLine("X Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.x, gyroSen.range_250_dps) + " rad/s");
 ```
 
 ```typescript
 // Retrieve gyroscope value of y axis with 500dps
-serial.writeLine("Y Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.y, gyroSen.RANGE_500_DPS) + " rad/s");
+serial.writeLine("Y Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.y, gyroSen.range_500_dps) + " rad/s");
 ```
 
 ```typescript
 // Retrieve gyroscope value of z axis with 1000 dps
-serial.writeLine("Z Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.z, gyroSen.RANGE_1000_DPS) + " rad/s");;
+serial.writeLine("Z Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.z, gyroSen.range_1000_dps) + " rad/s");;
 ```
 
 ```typescript
 // Retrieve gyroscope value of z axis with 2000 dps
-serial.writeLine("Z Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.z, gyroSen.RANGE_2000_DPS) + " rad/s");;
+serial.writeLine("Z Gyroscope: " + SENMPU6050.gyroscope(axisXYZ.z, gyroSen.range_2000_dps) + " rad/s");;
 ```
 
 ## Acceleration values
@@ -34,22 +34,22 @@ You can retrieve the acceleration value of each individual axis (X, Y and Z). Th
 
 ```typescript
 // Retrieve acceleration value of x axis with a range of +-2g
-serial.writeLine("X Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.x, accelSen.RANGE_2_G) + " g");
+serial.writeLine("X Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.x, accelSen.range_2_g) + " g");
 ```
 
 ```typescript
 // Retrieve acceleration value of y axis with a range of +-4g
-serial.writeLine("Y Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.y, accelSen.RANGE_4_G) + " g");
+serial.writeLine("Y Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.y, accelSen.range_4_g) + " g");
 ```
 
 ```typescript
 // Retrieve acceleration value of z axis with a range of +-8g
-serial.writeLine("Z Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.z, accelSen.RANGE_8_G) + " g");
+serial.writeLine("Z Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.z, accelSen.range_8_g) + " g");
 ```
 
 ```typescript
 // Retrieve acceleration value of z axis with a range of +-16g
-serial.writeLine("Z Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.z, accelSen.RANGE_16_G) + " g");
+serial.writeLine("Z Acceleration: " + SENMPU6050.axisAcceleration(axisXYZ.z, accelSen.range_16_g) + " g");
 ```
 
 ## Angle values
@@ -58,22 +58,22 @@ You can retrieve the angle value of each individual axis (X, Y and Z). This valu
 
 ```typescript
 // Retrieve angle value of x axis with a range of +-2g
-serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.x, accelSen.RANGE_2_G) + " Degree");
+serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.x, accelSen.range_2_g) + " Degree");
 ```
 
 ```typescript
 // Retrieve angle value of y axis with a range of +-4g
-serial.writeLine("Y Angle: " + SENMPU6050.axisRotation(axisXYZ.y, accelSen.RANGE_4_G) + " Degree");
+serial.writeLine("Y Angle: " + SENMPU6050.axisRotation(axisXYZ.y, accelSen.range_4_g) + " Degree");
 ```
 
 ```typescript
 // Retrieve angle value of z axis with a range of +-8g
-serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.z, accelSen.RANGE_8_G) + " Degree");
+serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.z, accelSen.range_8_g) + " Degree");
 ```
 
 ```typescript
 // Retrieve angle value of z axis with a range of +-16g
-serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.z, accelSen.RANGE_16_G) + " Degree");
+serial.writeLine("X Angle: " + SENMPU6050.axisRotation(axisXYZ.z, accelSen.range_16_g) + " Degree");
 ```
 
 ## Temperature

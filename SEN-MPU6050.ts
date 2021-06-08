@@ -15,13 +15,13 @@ enum axisXYZ {
  */
  enum accelSen {
      //% block="2g"
-     RANGE_2_G,
+     range_2_g,
      //% block="4g"
-     RANGE_4_G,
+     range_4_g,
      //% block="8g"
-     RANGE_8_G,
+     range_8_g,
      //% block="16g"
-     RANGE_16_G
+     range_16_g
  }
 
  /**
@@ -29,13 +29,13 @@ enum axisXYZ {
   */
   enum gyroSen {
       //% block="250dps"
-      RANGE_250_DPS,
+      range_250_dps,
       //% block="500dps"
-      RANGE_500_DPS,
+      range_500_dps,
       //% block="1000dps"
-      RANGE_1000_DPS,
+      range_1000_dps,
       //% block="2000dps"
-      RANGE_2000_DPS
+      range_2000_dps
   }
 
 /**
@@ -90,19 +90,19 @@ namespace SENMPU6050 {
     function updateAcceleration(sensitivity: number) {
         // Set sensitivity of acceleration range, according to selection and datasheet value
         let accelRange = 0;
-        if(sensitivity == accelSen.RANGE_2_G) {
+        if(sensitivity == accelSen.range_2_g) {
             // +- 2g
             accelRange = 16384;
         }
-        else if(sensitivity == accelSen.RANGE_4_G) {
+        else if(sensitivity == accelSen.range_4_g) {
             // +- 4g
             accelRange = 8192;
         }
-        else if(sensitivity == accelSen.RANGE_8_G) {
+        else if(sensitivity == accelSen.range_8_g) {
             // +- 8g
             accelRange = 4096;
         }
-        else if(sensitivity == accelSen.RANGE_16_G) {
+        else if(sensitivity == accelSen.range_16_g) {
             // +- 16g
             accelRange = 2048;
         }
@@ -115,19 +115,19 @@ namespace SENMPU6050 {
     function updateGyroscope(sensitivity: gyroSen) {
         // Set sensitivity of gyroscope range, according to selection and datasheet value
         let gyroRange = 0;
-        if(sensitivity == gyroSen.RANGE_250_DPS) {
+        if(sensitivity == gyroSen.range_250_dps) {
             // +- 250dps
             gyroRange = 131;
         }
-        else if(sensitivity == gyroSen.RANGE_500_DPS) {
+        else if(sensitivity == gyroSen.range_500_dps) {
             // +- 500dps
             gyroRange = 65.5;
         }
-        else if(sensitivity == gyroSen.RANGE_1000_DPS) {
+        else if(sensitivity == gyroSen.range_1000_dps) {
             // +- 1000dps
             gyroRange = 32.8;
         }
-        else if(sensitivity == gyroSen.RANGE_2000_DPS) {
+        else if(sensitivity == gyroSen.range_2000_dps) {
             // +- 2000dps
             gyroRange = 16.4;
         }
