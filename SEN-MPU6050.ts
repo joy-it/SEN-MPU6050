@@ -203,7 +203,7 @@ namespace SENMPU6050 {
      */
     //% block="Acceleration of %xaxisXYZ axis with %accelSen sensitivity (Unit: g)"
     //% weight=85
-    export function axisAcceleration(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisAcceleration(axis: axisXYZ, sensitivity: gyroSen): number {
         updateAcceleration(sensitivity);
         // Return acceleration of specific axis
         if(axis == axisXYZ.x) {
