@@ -68,7 +68,7 @@ namespace SENMPU6050 {
     let Xgyro_tot=0;
     let Ygyro_tot=0;
     let Zgyro_tot=0;
-
+    CC
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
