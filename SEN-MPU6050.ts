@@ -247,7 +247,7 @@ namespace SENMPU6050 {
             Ygyro_tot = (Ygyro_tot + ( yGyro * delta) ) * (180/pi);
             return Ygyro_tot;
         }
-        else if(axis == axisXYZ.z) {
+        else {
             Zgyro_tot = (Zgyro_tot + ( zGyro * delta) ) * (180/pi);
             return Zgyro_tot;
         }
