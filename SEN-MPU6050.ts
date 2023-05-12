@@ -63,6 +63,12 @@ namespace SENMPU6050 {
     let xGyro = 0;
     let yGyro = 0;
     let zGyro = 0;
+    let delta = 0;
+    let time_pre =0;
+    let Xgyro_tot=0;
+    let Ygyro_tot=0;
+    let Zgyro_tot=0;
+
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
@@ -220,6 +226,32 @@ namespace SENMPU6050 {
         return 36.53 + rawTemp / 340;
     }
 
+     /**
+     * Get rotation of the corresponding Axis
+     */
+    //% block="Angulo de eje %xaxisXYZ Sensibilidad %gyroSen  (Unidades: Sexagesimales)"
+    //% weight=90
+    export function Rotacion(axis: axisXYZ, sensitivity: accelSen): number {
+        updateGyroscope(sensitivity);
+        let delta = control.millis() - time_pre;
+        let time_pre = control.millis():
+        let radians;
+        if(axis == axisXYZ.x) {
+            Xgyro_tot = ( xGyro + Xgyro_tot)* (180/pi);
+
+        }
+        else if(axis == axisXYZ.y) {
+            Ygyro_tot = ( yGyro + Ygyro_tot)* (180/pi);
+        }
+        else if(axis == axisXYZ.z) {
+            Zgyro_tot = ( zGyro + Zgyro_tot)* (180/pi);
+        }
+
+        // Convert radian to degrees and return
+        let pi = Math.PI;
+        let degrees = radians * (180/pi);
+        return degrees;
+    }
 
 
 
