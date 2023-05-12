@@ -238,17 +238,17 @@ namespace SENMPU6050 {
         time_pre = control.millis();
         let radians;
         if(axis == axisXYZ.x) {
-            Xgyro_tot = (Xgyro_tot + ( xGyro * delta) ) * (180/pi);
+            Xgyro_tot = (Xgyro_tot + ( xGyro * delta / 1000.0 ) ) * (180/pi);
             return Xgyro_tot;
            
 
         }
         else if(axis == axisXYZ.y) {
-            Ygyro_tot = (Ygyro_tot + ( yGyro * delta) ) * (180/pi);
+            Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
             return Ygyro_tot;
         }
         else {
-            Zgyro_tot = (Zgyro_tot + ( zGyro * delta) ) * (180/pi);
+            Zgyro_tot = (Zgyro_tot + ( zGyro * delta/ 1000) ) * (180/pi);
             return Zgyro_tot;
         }
 
