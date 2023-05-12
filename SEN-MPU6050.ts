@@ -234,8 +234,8 @@ namespace SENMPU6050 {
     //% weight=90
     export function Rotacion(axis: axisXYZ, sensitivity: gyroSen): number {
         updateGyroscope(sensitivity);
-        let delta = control.millis() - time_pre;
-        let time_pre = control.millis();
+        delta = control.millis() - time_pre;
+        time_pre = control.millis();
         let radians;
         if(axis == axisXYZ.x) {
             Xgyro_tot = (Xgyro_tot + ( xGyro * delta) ) * (180/pi);
