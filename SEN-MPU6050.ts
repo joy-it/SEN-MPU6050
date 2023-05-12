@@ -73,7 +73,7 @@ namespace SENMPU6050 {
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);;
+        return pins.i2cReadNumber(i2cAddress, NumberFormat.UInt8BE);
     }
 
     function readData(reg: number) {
@@ -235,26 +235,27 @@ namespace SENMPU6050 {
     export function Rotacion(axis: axisXYZ, sensitivity: accelSen): number {
         updateGyroscope(sensitivity);
         let delta = control.millis() - time_pre;
-        let time_pre = control.millis():
+        let time_pre = control.millis();
         let radians;
         if(axis == axisXYZ.x) {
-            Xgyro_tot = ( xGyro + Xgyro_tot)* (180/pi);
+            Xgyro_tot = (Xgyro_tot + ( xGyro * delta) ) * (180/pi);
             return Xgyro_tot;
+           
 
         }
         else if(axis == axisXYZ.y) {
-            Ygyro_tot = ( yGyro + Ygyro_tot)* (180/pi);
+            Ygyro_tot = (Ygyro_tot + ( yGyro * delta) ) * (180/pi);
             return Ygyro_tot;
         }
         else if(axis == axisXYZ.z) {
-            Zgyro_tot = ( zGyro + Zgyro_tot)* (180/pi);
+            Zgyro_tot = (Zgyro_tot + ( zGyro * delta) ) * (180/pi);
             return Zgyro_tot;
         }
 
         // Convert radian to degrees and return
         
        
-        return 
+        
     }
 
 
