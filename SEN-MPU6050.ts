@@ -68,7 +68,8 @@ namespace SENMPU6050 {
     let Xgyro_tot=0;
     let Ygyro_tot=0;
     let Zgyro_tot=0;
-    CC
+    let pi = Math.PI;
+    
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
@@ -238,19 +239,22 @@ namespace SENMPU6050 {
         let radians;
         if(axis == axisXYZ.x) {
             Xgyro_tot = ( xGyro + Xgyro_tot)* (180/pi);
+            return Xgyro_tot;
 
         }
         else if(axis == axisXYZ.y) {
             Ygyro_tot = ( yGyro + Ygyro_tot)* (180/pi);
+            return Ygyro_tot;
         }
         else if(axis == axisXYZ.z) {
             Zgyro_tot = ( zGyro + Zgyro_tot)* (180/pi);
+            return Zgyro_tot;
         }
 
         // Convert radian to degrees and return
-        let pi = Math.PI;
-        let degrees = radians * (180/pi);
-        return degrees;
+        
+       
+        return 
     }
 
 
