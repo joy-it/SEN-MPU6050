@@ -250,7 +250,7 @@ namespace SENMPU6050 {
         else {
             //Zgyro_tot = (Zgyro_tot + ( zGyro * delta/ 1000) ) * (180/pi);
 
-            Zgyro_tot = 0.98* (Zgyro_tot + zGyro * deltat) + 0.02*zAccel;
+            Zgyro_tot = 0.98* (Zgyro_tot + zGyro * delta) + 0.02*zAccel;
             return Zgyro_tot;
         }
 
