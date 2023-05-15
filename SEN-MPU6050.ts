@@ -188,12 +188,12 @@ namespace SENMPU6050 {
         else if(axis == axisXYZ.y) {
             radians = -Math.atan2(xAccel, dist(yAccel,zAccel));
         }
-        else if(axis == axisXYZ.z) {
+        else  {
             radians = Math.atan2(zAccel, dist(xAccel, yAccel));
         }
 
         // Convert radian to degrees and return
-        let pi = Math.PI;
+        
         let degrees = radians * (180/pi);
         return degrees;
     }
@@ -230,10 +230,11 @@ namespace SENMPU6050 {
      /**
      * Get rotation of the corresponding Axis
      */
-    //% block="Angulo de eje %xaxisXYZ Sensibilidad %gyroSen  (Unidades: Sexagesimales)"
+    //% block="Angulo de eje %xaxisXYZ S GIROSEN %gyroSen ACELSEN %accelSen  (Unidades: Sexagesimales)"
     //% weight=90
-    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen): number {
+    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen): number {
         updateGyroscope(sensitivity);
+        updateAcceleration (sensitivity2)
         delta = control.millis() - time_pre;
         time_pre = control.millis();
         let radians;
