@@ -69,7 +69,11 @@ namespace SENMPU6050 {
     let Ygyro_tot=0;
     let Zgyro_tot=0;
     let pi = Math.PI;
-    
+    let q = [1.0, 0.0, 0.0, 0.0];
+    let Kp = 30.0;
+    let Ki = 0.0;
+    const A_cal = [265.0, -80.0, -700, 0.994, 1.000, 1.014]; // 0..2 offset xyz, 3..5 scale xyz
+    const G_off = [ -499.5,-17.7,-82.0];
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
@@ -227,6 +231,73 @@ namespace SENMPU6050 {
         return 36.53 + rawTemp / 340;
     }
 
+    export function  Mahony_update():number {
+        let recipNorm;
+        let vx, vy, vz;
+        let ex, ey, ez;  //error terms
+        let qa, qb, qc;
+        let ix = 0.0, iy = 0.0, iz = 0.0;  //integral feedback terms
+        let tmp;
+      
+        // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
+        tmp = xAccel * xAccel + yAccel * yAccel + zAccel * zAccel;
+        if (tmp > 0.0)
+        
+    // Normalise accelerometer (assumed to measure the direction of gravity in body frame)
+            recipNorm = 1.0 / Math.sqrt(tmp);
+            xAccel *= recipNorm;
+            yAccel *= recipNorm;
+            zAccel *= recipNorm;
+
+            // Estimated direction of gravity in the body frame (factor of two divided out)
+            vx = q[1] * q[3] - q[0] * q[2];
+            vy = q[0] * q[1] + q[2] * q[3];
+            vz = q[0] * q[0] - 0.5 + q[3] * q[3];
+
+            // Error is cross product between estimated and measured direction of gravity in body frame
+            // (half the actual magnitude)
+            ex = (yAccel * vz - zAccel * vy);
+            ey = (zAccel * vx - xAccel * vz);
+            ez = (xAccel * vy - yAccel * vx);
+
+            // Compute and apply to gyro term the integral feedback, if enabled
+            if (Ki > 0.0) {
+
+                ix += Ki * ex * delta;  // integral error scaled by Ki
+                iy += Ki * ey * delta;
+                iz += Ki * ez * delta;
+                xGyro = xGyro + ix;  // apply integral feedback
+                yGyro = yGyro +iy;
+                zGyro = zGyro + iz;
+                }
+
+            // Apply proportional feedback to gyro term
+            xGyro = xGyro + (Kp * ex);
+            yGyro = yGyro + ( Kp * ey);
+            zGyro =zGyro + (Kp * ez);
+
+              // Integrate rate of change of quaternion, q cross gyro term
+            delta = 0.5 * delta;
+            xGyro *= delta;   // pre-multiply common factors
+            yGyro *= delta;
+            zGyro *= delta;
+            qa = q[0];
+            qb = q[1];
+            qc = q[2];
+            q[0] = q[0] + (-qb * xGyro - qc * yGyro - q[3] * zGyro);
+            q[1] = q[1]+ (qa * xGyro + qc * zGyro - q[3] * yGyro);
+            q[2] = q[2]+(qa * yGyro - qb * zGyro + q[3] * xGyro);
+            q[3] = q[3]+(qa * zGyro + qb * yGyro - qc * xGyro);
+
+            // renormalise quaternion
+            recipNorm = 1.0 / Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+            q[0] = q[0] * recipNorm;
+            q[1] = q[1] * recipNorm;
+            q[2] = q[2] * recipNorm;
+            q[3] = q[3] * recipNorm;
+            }
+  }
+
      /**
      * Get rotation of the corresponding Axis
      */
@@ -238,21 +309,28 @@ namespace SENMPU6050 {
         delta = control.millis() - time_pre;
         time_pre = control.millis();
         let radians;
+
+        Mahony_update ()
+
         if(axis == axisXYZ.x) {
-            Xgyro_tot = (Xgyro_tot + ( xGyro * delta / 1000.0 ) ) * (180/pi);
-            return Xgyro_tot;
+            let roll  = Math.atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
+            //Xgyro_tot = (Xgyro_tot + ( xGyro * delta / 1000.0 ) ) * (180/pi);
+            
+            return roll;
            
 
         }
         else if(axis == axisXYZ.y) {
-            Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
-            return Ygyro_tot;
+            let pitch = Math.asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
+            //Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
+            return pitch;
         }
         else {
             //Zgyro_tot = (Zgyro_tot + ( zGyro * delta/ 1000) ) * (180/pi);
 
-            Zgyro_tot = 0.98* (Zgyro_tot + zGyro * delta) + 0.02*zAccel;
-            return Zgyro_tot;
+            //Zgyro_tot = 0.98* (Zgyro_tot + zGyro * delta) + 0.02*zAccel;
+            let yaw   = -Math.atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
+            return yaw;
         }
 
         // Convert radian to degrees and return
