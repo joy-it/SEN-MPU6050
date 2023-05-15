@@ -296,7 +296,7 @@ namespace SENMPU6050 {
             q[2] = q[2] * recipNorm;
             q[3] = q[3] * recipNorm;
             }
-  }
+  
 
      /**
      * Get rotation of the corresponding Axis
