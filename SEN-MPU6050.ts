@@ -38,6 +38,13 @@ enum axisXYZ {
       range_2000_dps
   }
 
+  enum unidadesGyro {
+        //%block="°"
+        uni_sexa,
+        //%block="rad"
+        uni_rad
+
+  } 
 /**
   * SEN-MPU6050 Block
   */
@@ -69,7 +76,8 @@ namespace SENMPU6050 {
     let Ygyro_tot=0;
     let Zgyro_tot=0;
     let pi = Math.PI;
-    let q = [1.0, 0.0, 0.0, 0.0];
+    let q: Array<number> 
+    q = [1.0, 0.0, 0.0, 0.0];
     let Kp = 30.0;
     let Ki = 0.0;
     const A_cal = [265.0, -80.0, -700, 0.994, 1.000, 1.014]; // 0..2 offset xyz, 3..5 scale xyz
@@ -96,6 +104,7 @@ namespace SENMPU6050 {
     function dist(a: number, b: number): number {
         return Math.sqrt((a*a)+(b*b));
     }
+    function rad2deg (num:number): number {return num * (180/pi);}
 
     // Update acceleration data via I2C
     function updateAcceleration(sensitivity: number) {
@@ -182,7 +191,7 @@ namespace SENMPU6050 {
      */
     //% block="Angle of %xaxisXYZ axis with %accelSen sensitivity (Unit: Degrees)"
     //% weight=90
-    export function axisRotation(axis: axisXYZ, sensitivity: accelSen): number {
+    export function axisRotation(axis: axisXYZ, sensitivity: accelSen):number {
         updateAcceleration(sensitivity);
 
         let radians;
@@ -231,7 +240,7 @@ namespace SENMPU6050 {
         return 36.53 + rawTemp / 340;
     }
 
-    export function  Mahony_update():number {
+    export function  Mahony_update():Array<number> {
         let recipNorm;
         let vx, vy, vz;
         let ex, ey, ez;  //error terms
@@ -297,34 +306,35 @@ namespace SENMPU6050 {
             q[3] = q[3] * recipNorm;
             
 
-            return
-            }
+            return q;
+            
+        }
   
 
      /**
      * Get rotation of the corresponding Axis
      */
-    //% block="Angulo de eje %xaxisXYZ S GIROSEN %gyroSen ACELSEN %accelSen  (Unidades: Sexagesimales)"
+    //% block="Angulo de eje %xaxisXYZ S GIROSEN %gyroSen ACELSEN %accelSen  (Unidades: %unidadesGyro)"
     //% weight=90
-    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen): number {
+    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen, Unidades:unidadesGyro ): number {
         updateGyroscope(sensitivity);
         updateAcceleration (sensitivity2)
         delta = control.millis() - time_pre;
         time_pre = control.millis();
         let radians;
 
-        Mahony_update ()
+        let quaternion = Mahony_update ()
 
         if(axis == axisXYZ.x) {
-            let roll  = Math.atan2((q[0] * q[1] + q[2] * q[3]), 0.5 - (q[1] * q[1] + q[2] * q[2]));
+            let roll  = Math.atan2((q[0] * quaternion[1] + quaternion[2] * quaternion[3]), 0.5 - (quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]));
             //Xgyro_tot = (Xgyro_tot + ( xGyro * delta / 1000.0 ) ) * (180/pi);
-            
+            if (unidades==unidadesGyro.uni_sexa) {roll= rad2deg(roll);}
             return roll;
            
 
         }
         else if(axis == axisXYZ.y) {
-            let pitch = Math.asin(2.0 * (q[0] * q[2] - q[1] * q[3]));
+            let pitch = Math.asin(2.0 * (quaternion[0] * quaternion[2] - quaternion[1] * quaternion[3]));
             //Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
             return pitch;
         }
@@ -332,7 +342,7 @@ namespace SENMPU6050 {
             //Zgyro_tot = (Zgyro_tot + ( zGyro * delta/ 1000) ) * (180/pi);
 
             //Zgyro_tot = 0.98* (Zgyro_tot + zGyro * delta) + 0.02*zAccel;
-            let yaw   = -Math.atan2((q[1] * q[2] + q[0] * q[3]), 0.5 - (q[2] * q[2] + q[3] * q[3]));
+            let yaw   = -Math.atan2((quaternion[1] * quaternion[2] + quaternion[0] * quaternion[3]), 0.5 - (quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3]));
             return yaw;
         }
 
