@@ -80,18 +80,24 @@ namespace SENMPU6050 {
     let xGyro = 0;
     let yGyro = 0;
     let zGyro = 0;
-    let delta = 0;
+    let deltat = 0;
     let time_pre =0;
     let Xgyro_tot=0;
     let Ygyro_tot=0;
     let Zgyro_tot=0;
     let pi = Math.PI;
     let q: Array<number> 
+    let Gxyz: Array<number> = [0.0,0.0,0.0]
+    let Axyz: Array<number> = [0.0,0.0,0.0]
     q = [1.0, 0.0, 0.0, 0.0];
     let Kp = 30.0;
     let Ki = 0.0;
     const A_cal = [265.0, -80.0, -700, 0.994, 1.000, 1.014]; // 0..2 offset xyz, 3..5 scale xyz
     const G_off = [ -499.5,-17.7,-82.0];
+    let gscale=0
+    let now= 0
+    let last = 0
+   
 
     function i2cRead(reg: number): number {
         pins.i2cWriteNumber(i2cAddress, reg, NumberFormat.UInt8BE);
@@ -136,6 +142,18 @@ namespace SENMPU6050 {
             // +- 16g
             accelRange = 2048;
         }
+
+        let ax=readData(xAccelAddr)
+        let ay=readData(yAccelAddr)
+        let az=readData(zAccelAddr)
+        
+        Axyz[0] = ax;
+        Axyz[1] = ay;
+        Axyz[2] = az;
+
+  //apply offsets and scale factors from Magneto
+        for (let i = 0; i < 3; i++) { Axyz[i] = (Axyz[i] - A_cal[i]) * A_cal[i + 3];}
+
         xAccel = readData(xAccelAddr) / accelRange;
         yAccel = readData(yAccelAddr) / accelRange;
         zAccel = readData(zAccelAddr) / accelRange;
@@ -148,22 +166,35 @@ namespace SENMPU6050 {
         if(sensitivity == gyroSen.range_250_dps) {
             // +- 250dps
             gyroRange = 131;
+            let gscale = (250/32768.0)*(Math.PI/180.0);
         }
         else if(sensitivity == gyroSen.range_500_dps) {
             // +- 500dps
             gyroRange = 65.5;
+            let gscale = (500/32768.0)*(Math.PI/180.0);
         }
         else if(sensitivity == gyroSen.range_1000_dps) {
             // +- 1000dps
             gyroRange = 32.8;
+            let gscale = (1000/32768.0)*(Math.PI/180.0);
         }
         else if(sensitivity == gyroSen.range_2000_dps) {
             // +- 2000dps
             gyroRange = 16.4;
+            let gscale = (2000/32768.0)*(Math.PI/180.0);
         }
-        xGyro = readData(xGyroAddr) / gyroRange;
-        yGyro = readData(yGyroAddr) / gyroRange;
-        zGyro = readData(zGyroAddr) / gyroRange;
+        let gx=readData(xGyroAddr)
+        let gy=readData(yGyroAddr)
+        let gz=readData(zGyroAddr)
+
+        xGyro = gx / gyroRange;
+        yGyro = gy / gyroRange;
+        zGyro = gz / gyroRange;
+       
+        Gxyz[0] = (gx - G_off[0]) * gscale; //250 LSB(d/s) default to radians/s
+        Gxyz[1] = ( gy - G_off[1]) * gscale;
+        Gxyz[2] = ( gz - G_off[2]) * gscale;
+        
     }
 
     /**
@@ -250,7 +281,7 @@ namespace SENMPU6050 {
         return 36.53 + rawTemp / 340;
     }
 
-    export function  Mahony_update():Array<number> {
+    export function  Mahony_update(ax:number, ay:number, az:number,  gx:number, gy:number,  gz:number, deltat:number):Array<number> {
         let recipNorm;
         let vx, vy, vz;
         let ex, ey, ez;  //error terms
@@ -259,14 +290,14 @@ namespace SENMPU6050 {
         let tmp;
       
         // Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
-        tmp = xAccel * xAccel + yAccel * yAccel + zAccel * zAccel;
+        tmp = ax * ax + ay * ay + az * az;
         if (tmp > 0.0)
         
     // Normalise accelerometer (assumed to measure the direction of gravity in body frame)
             recipNorm = 1.0 / Math.sqrt(tmp);
-            xAccel *= recipNorm;
-            yAccel *= recipNorm;
-            zAccel *= recipNorm;
+            ax *= recipNorm;
+            ay *= recipNorm;
+            ay *= recipNorm;
 
             // Estimated direction of gravity in the body frame (factor of two divided out)
             vx = q[1] * q[3] - q[0] * q[2];
@@ -275,38 +306,38 @@ namespace SENMPU6050 {
 
             // Error is cross product between estimated and measured direction of gravity in body frame
             // (half the actual magnitude)
-            ex = (yAccel * vz - zAccel * vy);
-            ey = (zAccel * vx - xAccel * vz);
-            ez = (xAccel * vy - yAccel * vx);
+            ex = (ay * vz - az * vy);
+            ey = (az * vx - ax * vz);
+            ez = (ax * vy - ay * vx);
 
             // Compute and apply to gyro term the integral feedback, if enabled
             if (Ki > 0.0) {
 
-                ix += Ki * ex * delta;  // integral error scaled by Ki
-                iy += Ki * ey * delta;
-                iz += Ki * ez * delta;
-                xGyro = xGyro + ix;  // apply integral feedback
-                yGyro = yGyro +iy;
-                zGyro = zGyro + iz;
+                ix += Ki * ex * deltat;  // integral error scaled by Ki
+                iy += Ki * ey * deltat;
+                iz += Ki * ez * deltat;
+                gx += ix;  // apply integral feedback
+                gy += iy;
+                gz += iz;
                 }
 
             // Apply proportional feedback to gyro term
-            xGyro = xGyro + (Kp * ex);
-            yGyro = yGyro + ( Kp * ey);
-            zGyro =zGyro + (Kp * ez);
+            gx += Kp * ex;
+            gy += Kp * ey;
+            gz += Kp * ez;
 
               // Integrate rate of change of quaternion, q cross gyro term
-            delta = 0.5 * delta;
-            xGyro *= delta;   // pre-multiply common factors
-            yGyro *= delta;
-            zGyro *= delta;
+            deltat = 0.5 * deltat;
+            gx *= deltat;   // pre-multiply common factors
+            gy *= deltat;
+            gz *= deltat;
             qa = q[0];
             qb = q[1];
             qc = q[2];
-            q[0] = q[0] + (-qb * xGyro - qc * yGyro - q[3] * zGyro);
-            q[1] = q[1]+ (qa * xGyro + qc * zGyro - q[3] * yGyro);
-            q[2] = q[2]+(qa * yGyro - qb * zGyro + q[3] * xGyro);
-            q[3] = q[3]+(qa * zGyro + qb * yGyro - qc * xGyro);
+            q[0] += (-qb * gx - qc * gy - q[3] * gz);
+            q[1] += (qa * gx + qc * gz - q[3] * gy);
+            q[2] += (qa * gy - qb * gz + q[3] * gx);
+            q[3] += (qa * gz + qb * gy - qc * gx);
 
             // renormalise quaternion
             recipNorm = 1.0 / Math.sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
@@ -329,11 +360,12 @@ namespace SENMPU6050 {
     export function Rotacion(axis: RPY, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
         updateGyroscope(sensitivity);
         updateAcceleration (sensitivity2)
-        delta = control.millis() - time_pre;
-        time_pre = control.millis();
-        let radians;
+       
+        now =control.micros();
+        deltat = (now - last) * 1.0e-6; //seconds since last update
+        last = now;
 
-        let quaternion = Mahony_update ()
+        let quaternion = Mahony_update (Axyz[0], Axyz[1], Axyz[2], Gxyz[0], Gxyz[1], Gxyz[2], deltat)
 
         if(axis == RPY.roll) {
             let roll  = Math.atan2((q[0] * quaternion[1] + quaternion[2] * quaternion[3]), 0.5 - (quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]));
