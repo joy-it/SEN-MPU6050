@@ -336,7 +336,7 @@ namespace SENMPU6050 {
         else if(axis == axisXYZ.y) {
             let pitch = Math.asin(2.0 * (quaternion[0] * quaternion[2] - quaternion[1] * quaternion[3]));
             //Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
-            if (unidades==unidadesGyro.uni_sexa) {pitch= rad2deg(roll);}
+            if (unidades==unidadesGyro.uni_sexa) {pitch= rad2deg(pitch);}
             return pitch;
         }
         else {
@@ -344,7 +344,7 @@ namespace SENMPU6050 {
 
             //Zgyro_tot = 0.98* (Zgyro_tot + zGyro * delta) + 0.02*zAccel;
             let yaw   = -Math.atan2((quaternion[1] * quaternion[2] + quaternion[0] * quaternion[3]), 0.5 - (quaternion[2] * quaternion[2] + quaternion[3] * quaternion[3]));
-            if (unidades==unidadesGyro.uni_sexa) {yaw= rad2deg(roll);}
+            if (unidades==unidadesGyro.uni_sexa) {yaw= rad2deg(yaw);}
             return yaw;
         }
 
