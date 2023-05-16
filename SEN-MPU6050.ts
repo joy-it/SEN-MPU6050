@@ -316,7 +316,7 @@ namespace SENMPU6050 {
      */
     //% block="Angulo de eje %xaxisXYZ S GIROSEN %gyroSen ACELSEN %accelSen  (Unidades: %unidadesGyro)"
     //% weight=90
-    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen, Unidades:unidadesGyro ): number {
+    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
         updateGyroscope(sensitivity);
         updateAcceleration (sensitivity2)
         delta = control.millis() - time_pre;
