@@ -345,16 +345,16 @@ namespace SENMPU6050 {
             q[1] = q[1] * recipNorm;
             q[2] = q[2] * recipNorm;
             q[3] = q[3] * recipNorm;
-            
+            serial.writeValue("q", q))
 
             return q;
             
         }
   
 
-     /**
-     * Get rotation of the corresponding Axis
-     */
+    /**
+    * Get rotation of the corresponding Axis
+    */
     //% block="Angulo eje %xaxisXYZ  Girosen %gyroSen Acelsen %accelSen Uni: %unidadesGyro"
     //% weight=90
     export function Rotacion(axis: RPY, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
