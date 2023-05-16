@@ -345,7 +345,7 @@ namespace SENMPU6050 {
             q[1] = q[1] * recipNorm;
             q[2] = q[2] * recipNorm;
             q[3] = q[3] * recipNorm;
-            serial.writeValue("q", q))
+            serial.writeValue("q", q);
 
             return q;
             
