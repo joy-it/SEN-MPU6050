@@ -45,6 +45,16 @@ enum axisXYZ {
         uni_rad
 
   } 
+
+    enum RPY{
+         //%block="Roll"
+         roll,
+         //%block="Pitch"
+         pitch,
+         //%block="Yaw"
+         yaw
+
+    }
 /**
   * SEN-MPU6050 Block
   */
@@ -316,7 +326,7 @@ namespace SENMPU6050 {
      */
     //% block="Angulo eje %xaxisXYZ  Girosen %gyroSen Acelsen %accelSen Uni: %unidadesGyro"
     //% weight=90
-    export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
+    export function Rotacion(axis: RPY, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
         updateGyroscope(sensitivity);
         updateAcceleration (sensitivity2)
         delta = control.millis() - time_pre;
@@ -325,7 +335,7 @@ namespace SENMPU6050 {
 
         let quaternion = Mahony_update ()
 
-        if(axis == axisXYZ.x) {
+        if(axis == RPY.roll) {
             let roll  = Math.atan2((q[0] * quaternion[1] + quaternion[2] * quaternion[3]), 0.5 - (quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]));
             //Xgyro_tot = (Xgyro_tot + ( xGyro * delta / 1000.0 ) ) * (180/pi);
             if (unidades==unidadesGyro.uni_sexa) {roll= rad2deg(roll);}
@@ -333,7 +343,7 @@ namespace SENMPU6050 {
            
 
         }
-        else if(axis == axisXYZ.y) {
+        else if(axis == RPY.pitch) {
             let pitch = Math.asin(2.0 * (quaternion[0] * quaternion[2] - quaternion[1] * quaternion[3]));
             //Ygyro_tot = (Ygyro_tot + ( yGyro * delta / 1000) ) * (180/pi);
             if (unidades==unidadesGyro.uni_sexa) {pitch= rad2deg(pitch);}
