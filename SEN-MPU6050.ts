@@ -154,9 +154,9 @@ namespace SENMPU6050 {
   //apply offsets and scale factors from Magneto
         for (let i = 0; i < 3; i++) { Axyz[i] = (Axyz[i] - A_cal[i]) * A_cal[i + 3];}
 
-        xAccel = readData(xAccelAddr) / accelRange;
-        yAccel = readData(yAccelAddr) / accelRange;
-        zAccel = readData(zAccelAddr) / accelRange;
+        xAccel = ax / accelRange;
+        yAccel = ay / accelRange;
+        zAccel = az / accelRange;
     }
 
     // Update gyroscope data via I2C
