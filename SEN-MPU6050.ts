@@ -314,7 +314,7 @@ namespace SENMPU6050 {
      /**
      * Get rotation of the corresponding Axis
      */
-    //% block="Angulo de eje %xaxisXYZ S GIROSEN %gyroSen ACELSEN %accelSen  (Unidades: %unidadesGyro)"
+    //% block="Angulo eje %xaxisXYZ  Girosen %gyroSen Acelsen %accelSen Uni: %unidadesGyro"
     //% weight=90
     export function Rotacion(axis: axisXYZ, sensitivity: gyroSen, sensitivity2: accelSen, unidades:unidadesGyro ): number {
         updateGyroscope(sensitivity);
