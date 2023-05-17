@@ -312,13 +312,13 @@ namespace SENMPU6050 {
      */
     //% block="Initialize MPU6050 Girosen %gyroSen Acelsen %accelSen"
     //% weight=100
-    export function initMPU6050() {
+    export function initMPU6050(acel:accelSen, gyro: gyroSen) {
         let buffer = pins.createBuffer(2);
         buffer[0] = power_mgmt;
         buffer[1] = 0;
         pins.i2cWriteBuffer(i2cAddress, buffer);
-        updateAcceleration(accelSen);
-        updateGyroscope(gyroSen);
+        updateAcceleration(acel);
+        updateGyroscope(gyro);
 
         
     }
