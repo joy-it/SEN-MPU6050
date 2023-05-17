@@ -1,6 +1,6 @@
 {
     "name": "SEN-MPU6050",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "MakeCode package for the Joy-IT SEN-MPU6050",
     "license": "MIT",
     "dependencies": {
